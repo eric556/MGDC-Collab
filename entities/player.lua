@@ -6,11 +6,12 @@ Particle = require "entities.particle"
 
 local Player = Class("Player",Entity)
 
-local jumpVelocity = 400
-local runAccel = 500
-local brakeAccel = 1000
-local maxAmountOfJumps = 2
-local maxAmountOfSlams = 1
+--local jumpVelocity = 400
+--local runAccel = 2000
+--local brakeAccel = 2000
+--local airBrakeAccel = 1000
+--local maxAmountOfJumps = 2
+--local maxAmountOfSlams = 1
 
 PlayerID = 0
 
@@ -55,9 +56,9 @@ function Player:changeVelocityByInput(dt)
 	-- Getting current velocity
 	local vx,vy = self.vx,self.vy
 
-	if self.leftHorizontal < 0  then
+	if self.leftHorizontal < 0 and math.abs(vx) < maxSpeed then
 		vx = vx - dt * (vx>0 and brakeAccel or runAccel)
-	elseif self.leftHorizontal >0  then
+	elseif self.leftHorizontal >0 and math.abs(vx) < maxSpeed  then
 		vx = vx + dt * (vx < 0 and brakeAccel or runAccel)
 	else
 		local brake = dt * (vx < 0 and brakeAccel or -brakeAccel)

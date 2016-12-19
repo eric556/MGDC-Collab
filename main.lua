@@ -5,6 +5,7 @@ util = require "util"
 Player = require "entities.player"
 Tiki = require "entities.characters.Tiki"
 Block = require "entities.block"
+King = require "entities.characters.King"
 
 local menu = {}
 local game = {}
@@ -93,33 +94,13 @@ end
 function love.load()
     Gamestate.registerEvents()
     numberOfPlayers = numberOfPlayers + 1
-    p = Player:new(world,10 + (55 * numberOfPlayers),10,32 * 4,32 * 4,joystick,controls)
-    p.animations.image = love.graphics.newImage('characters.png')
-    p.animations.grid = anim8.newGrid(32,32,p.animations.image:getWidth(),p.animations.image:getHeight())
-    p.animations.frames["walk"] = anim8.newAnimation(p.animations.grid('1-4',2),0.1)
-    p.animations.frames["idle"] = anim8.newAnimation(p.animations.grid(1,2),0.1)
-    --p.animations.frames["jump"] = anim8.newAnimation(p.animations.grid(5,2),0.1)
-    p.animations.frames["jump"] = anim8.newAnimation(p.animations.grid('5-6',2),0.2,'pauseAtEnd')
-    p.animations.frames["fall"] = anim8.newAnimation(p.animations.grid(7,2),0.1)
-    p.animations.frames["land"] = anim8.newAnimation(p.animations.grid(8,2),0.1)
-    p.animations.frames["hit"] = anim8.newAnimation(p.animations.grid('9-10',2,9,2),0.1)
-    p.animations.frames["run"] = anim8.newAnimation(p.animations.grid('15-18',2),0.1)
-	players[#players + 1] = p
+    p = King:new(world,10 + (55 * numberOfPlayers),10,32 * 4,32 * 4,joystick,controls)
+	players[#players + 1] = p.player
     Gamestate.switch(menu)
 end
 
 function love.joystickadded(joystick)
     numberOfPlayers = numberOfPlayers + 1
-    p = Player:new(world,10 + (55 * numberOfPlayers),10,32 * 4,32 * 4,joystick,controls)
-    p.animations.image = love.graphics.newImage('characters.png')
-    p.animations.grid = anim8.newGrid(32,32,p.animations.image:getWidth(),p.animations.image:getHeight())
-    p.animations.frames["walk"] = anim8.newAnimation(p.animations.grid('1-4',2),0.1)
-    p.animations.frames["idle"] = anim8.newAnimation(p.animations.grid(1,2),0.1)
-    --p.animations.frames["jump"] = anim8.newAnimation(p.animations.grid(5,2),0.1)
-    p.animations.frames["jump"] = anim8.newAnimation(p.animations.grid('5-6',2),0.2,'pauseAtEnd')
-    p.animations.frames["fall"] = anim8.newAnimation(p.animations.grid(7,2),0.1)
-    p.animations.frames["land"] = anim8.newAnimation(p.animations.grid(8,2),0.1)
-    p.animations.frames["hit"] = anim8.newAnimation(p.animations.grid('9-10',2,9,2),0.1)
-    p.animations.frames["run"] = anim8.newAnimation(p.animations.grid('15-18',2),0.1)
-	players[#players + 1] = p
+    p = King:new(world,10 + (55 * numberOfPlayers),10,32 * 4,32 * 4,joystick,controls)
+	players[#players + 1] = p.player
 end
