@@ -8,7 +8,7 @@ local Player = Class("Player",Entity)
 
 local jumpVelocity = 400
 local runAccel = 500
-local brakeAccel = 600
+local brakeAccel = 1000
 local maxAmountOfJumps = 2
 local maxAmountOfSlams = 1
 

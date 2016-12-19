@@ -14,16 +14,16 @@ particles = {}
 numberOfPlayers = 0
 
 controls = {
-  leftStickLeft = {'axis:leftx-'},
-  leftStickRight = {'axis:leftx+'},
+  leftStickLeft = {'axis:leftx-','key:left','button:dpleft'},
+  leftStickRight = {'axis:leftx+','key:right', 'button:dpright'},
   leftStickUp = {'axis:lefty-'},
   leftStickDown= {'axis:lefty+'},
   rightStickLeft = {'axis:rightx-'},
   rightStickRight = {'axis:rightx+'},
   rightStickUp = {'axis:righty-'},
   rightStickDown= {'axis:righty+'},
-  jump = {'button:a'},
-  slam = {'button:x'},
+  jump = {'button:a', 'key:up','button:dpup'},
+  slam = {'button:x', 'key:down','button:dpdown'},
   shield = {'axis:triggerleft+'},
   shoot = {'axis:triggerright+'}
 }
@@ -92,6 +92,19 @@ end
 
 function love.load()
     Gamestate.registerEvents()
+    numberOfPlayers = numberOfPlayers + 1
+    p = Player:new(world,10 + (55 * numberOfPlayers),10,32 * 4,32 * 4,joystick,controls)
+    p.animations.image = love.graphics.newImage('characters.png')
+    p.animations.grid = anim8.newGrid(32,32,p.animations.image:getWidth(),p.animations.image:getHeight())
+    p.animations.frames["walk"] = anim8.newAnimation(p.animations.grid('1-4',2),0.1)
+    p.animations.frames["idle"] = anim8.newAnimation(p.animations.grid(1,2),0.1)
+    --p.animations.frames["jump"] = anim8.newAnimation(p.animations.grid(5,2),0.1)
+    p.animations.frames["jump"] = anim8.newAnimation(p.animations.grid('5-6',2),0.2,'pauseAtEnd')
+    p.animations.frames["fall"] = anim8.newAnimation(p.animations.grid(7,2),0.1)
+    p.animations.frames["land"] = anim8.newAnimation(p.animations.grid(8,2),0.1)
+    p.animations.frames["hit"] = anim8.newAnimation(p.animations.grid('9-10',2,9,2),0.1)
+    p.animations.frames["run"] = anim8.newAnimation(p.animations.grid('15-18',2),0.1)
+	players[#players + 1] = p
     Gamestate.switch(menu)
 end
 
