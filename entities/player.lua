@@ -6,19 +6,29 @@ Particle = require "entities.particle"
 
 local Player = Class("Player",Entity)
 
---local jumpVelocity = 400
---local runAccel = 2000
---local brakeAccel = 2000
---local airBrakeAccel = 1000
---local maxAmountOfJumps = 2
---local maxAmountOfSlams = 1
 
 PlayerID = 0
 
-function Player:initialize(world,x,y,w,h,joystick,controls)
+
+local gamepad = {
+  leftStickLeft = {'axis:leftx-'},
+  leftStickRight = {'axis:leftx+'},
+  leftStickUp = {'axis:lefty-'},
+  leftStickDown= {'axis:lefty+'},
+  rightStickLeft = {'axis:rightx-'},
+  rightStickRight = {'axis:rightx+'},
+  rightStickUp = {'axis:righty-'},
+  rightStickDown= {'axis:righty+'},
+  jump = {'button:a'},
+  slam = {'button:x'},
+  shield = {'axis:triggerleft+'},
+  shoot = {'axis:triggerright+'}
+}
+
+function Player:initialize(world,x,y,w,h,joystick)
 	Entity.initialize(self,world,x,y,w,h)
 	self.health = 5
-	self.input = Baton.new(controls,joystick)
+	self.input = Baton.new(gamepad,joystick)
 	self.rightHorizontal = self.input:get 'rightStickRight' - self.input:get 'rightStickLeft'
 	self.rightVertical = self.input:get 'rightStickDown' - self.input:get 'rightStickUp'
 	self.leftHorizontal = self.input:get 'leftStickRight' - self.input:get 'leftStickLeft'
@@ -42,7 +52,7 @@ end
 function Player:filter(other)
 	local kind = other.class.name
 	if kind == 'Block' then return 'slide' end
-	if kind == 'Player' and self.isSlamming and other.y - self.h > self.y  then 
+	if other.class.super.name == 'Player' and self.isSlamming and other.y - self.h > self.y  then 
 		return 'slide'
 	end
 	if kind == 'Shield' and other.shieldID ~= self.shield.shieldID then
@@ -89,7 +99,7 @@ end
 
 function Player:checkIfOnGround(ny, col)
 	if ny < 0  then self.onGround = true self.isSlamming = false self.numJumps = 0 self.isJumping = false self.animations.frames["jump"]:gotoFrame(1) self.animations.frames["jump"]:resume() end
-	if ny < 0 and col.other.class.name  ~= "Player"  then self.numSlams = 0 end
+	if ny < 0 and col.other.class.super.name  ~= "Player"  then self.numSlams = 0 end
 end
 
 function Player:moveColliding(dt)
@@ -103,7 +113,7 @@ function Player:moveColliding(dt)
 
 	for i = 1, len do
 		local col = cols[i]
-		if col.other.class.name == 'Player' and col.type == 'slide' then
+		if col.other.class.super.name == 'Player' and col.type == 'slide' then
 			col.other:takeHit(1)
 		end
 		if col.other.class.name ~= 'Shield'then

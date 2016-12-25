@@ -16,7 +16,7 @@ function Bullet:initialize(world,x,y,w,h,player,speed)
 end
 
 function Bullet:filter(other)
-	local kind = other.class.name
+	local kind = other.class.super.name
 	if kind == 'Shield' and self.player.shield.shieldID ~= other.shieldID then return 'touch' end
 	if kind == 'Player' and self.player.playerID ~= other.playerID then return 'touch' end
     if kind == 'Block' then return 'touch' end
@@ -31,7 +31,7 @@ function Bullet:moveColliding(dt)
 
 	for i = 1,len do
 		local col = cols[i]
-		if col.other.class.name == 'Player'then
+		if col.other.class.super.name == 'Player'then
 			col.other:takeHit(0.25)
 			self:destroy()
 			self.isDead = true

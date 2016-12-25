@@ -12,19 +12,20 @@ local game = {}
 local world = Bump.newWorld()
 players = {}
 particles = {}
+splatter = {}
 numberOfPlayers = 0
 
-controls = {
-  leftStickLeft = {'axis:leftx-','key:left','button:dpleft'},
-  leftStickRight = {'axis:leftx+','key:right', 'button:dpright'},
+local keyboard = {
+  leftStickLeft = {'key:left','button:dpleft'},
+  leftStickRight = {'key:right', 'button:dpright'},
   leftStickUp = {'axis:lefty-'},
   leftStickDown= {'axis:lefty+'},
   rightStickLeft = {'axis:rightx-'},
   rightStickRight = {'axis:rightx+'},
   rightStickUp = {'axis:righty-'},
   rightStickDown= {'axis:righty+'},
-  jump = {'button:a', 'key:up','button:dpup'},
-  slam = {'button:x', 'key:down','button:dpdown'},
+  jump = { 'key:up','button:dpup'},
+  slam = { 'key:down','button:dpdown'},
   shield = {'axis:triggerleft+'},
   shoot = {'axis:triggerright+'}
 }
@@ -44,12 +45,19 @@ function game:enter()
     local width, height = love.graphics.getDimensions()
     floor = Block:new(world,0,height - 10,width,10)
     floor2 = Block:new(world,0,300,400,10)
+    love.graphics.setBackgroundColor(74,102,137)
 end
 
 function game:update(dt)
     for i in ipairs(players) do
         if players[i].isDead then
-            particles[#particles + 1] = players[i].particles
+            --particles[#particles + 1] = players[i].particles
+            local s = {}
+            s.image = love.graphics.newImage("Assets/bloodsplats/bloodsplats_0003.png")
+            s.x = players[i].x
+            s.y = players[i].y
+            
+            splatter[#splatter + 1] = s
             table.remove(players,i)
         else
             players[i].input:update()
@@ -62,7 +70,7 @@ function game:update(dt)
             if particles[i][j].isDead then
                 table.remove(particles[i],j)
             else
-                particles[i][j]:update(dt)
+                --particles[i][j]:update(dt)
             end
         end
     end
@@ -74,19 +82,25 @@ function game:update(dt)
 end
 
 function game:draw()
+    
+    for i in ipairs(splatter) do
+        love.graphics.setBlendMode("add")
+        love.graphics.draw(splatter[i].image,splatter[i].x,splatter[i].y) 
+        love.graphics.setBlendMode("alpha")
+    end
+    
     for i in ipairs(players) do
         players[i]:drawHSL(i * 50, 90, 58)
-        --love.graphics.setColor(255,255,255)
-        --players[i].animations["walk"]:draw(players[i].animations.image,players[i].x,players[i].y,0,4,4)
-        --players[i]:draw()
         players[i]:displayStats()
     end
+    
 
     for i in ipairs(particles) do
         for j in ipairs(particles[i]) do
-            particles[i][j]:draw()
+            --particles[i][j]:draw()
         end
     end
+    
     floor:drawHSL(50,90,58)
     floor2:drawHSL(50,90,58)
 end
@@ -94,13 +108,14 @@ end
 function love.load()
     Gamestate.registerEvents()
     numberOfPlayers = numberOfPlayers + 1
-    p = King:new(world,10 + (55 * numberOfPlayers),10,32 * 4,32 * 4,joystick,controls)
-	players[#players + 1] = p.player
+    p = King:new(world,10 + (55 * numberOfPlayers),10,32 * 4,32 * 4,joystick,keyboard)
+    p.input = Baton.new(keyboard,joystick)
+	players[#players + 1] = p
     Gamestate.switch(menu)
 end
 
 function love.joystickadded(joystick)
     numberOfPlayers = numberOfPlayers + 1
-    p = King:new(world,10 + (55 * numberOfPlayers),10,32 * 4,32 * 4,joystick,controls)
-	players[#players + 1] = p.player
+    p = King:new(world,10 + (55 * numberOfPlayers),10,32 * 4,32 * 4,joystick,gamepad)
+	players[#players + 1] = p
 end
