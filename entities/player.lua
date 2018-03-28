@@ -199,7 +199,7 @@ function Player:drawRGB(r,g,b)
 		self.bullets[i]:draw()
 	end
     love.graphics.setColor(255,255,255)
-    self.animations.frames[self.animations.currentAnimation]:draw(self.animations.image,self.x,self.y,0,4,4)
+    self.animations.frames[self.animations.currentAnimation]:draw(self.animations.image,self.x,self.y,0,1,1)
 end;
 
 function Player:drawHSL(h,s,l)

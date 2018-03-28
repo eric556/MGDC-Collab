@@ -45,7 +45,7 @@ function game:enter()
     local width, height = love.graphics.getDimensions()
     floor = Block:new(world,0,height - 10,width,10)
     floor2 = Block:new(world,0,300,400,10)
-    love.graphics.setBackgroundColor(74,102,137)
+    love.graphics.setBackgroundColor(137,137,137)
 end
 
 function game:update(dt)
@@ -83,6 +83,12 @@ end
 
 function game:draw()
     
+    --background = love.graphics.newImage("Assets/BG.png")
+    --love.graphics.draw(background,0,0)
+    
+    floor:drawHSL(50,90,58)
+    floor2:drawHSL(50,90,58)
+    
     for i in ipairs(splatter) do
         love.graphics.setBlendMode("add")
         love.graphics.draw(splatter[i].image,splatter[i].x,splatter[i].y) 
@@ -91,7 +97,7 @@ function game:draw()
     
     for i in ipairs(players) do
         players[i]:drawHSL(i * 50, 90, 58)
-        players[i]:displayStats()
+        --players[i]:displayStats()
     end
     
 
@@ -101,21 +107,21 @@ function game:draw()
         end
     end
     
-    floor:drawHSL(50,90,58)
-    floor2:drawHSL(50,90,58)
+    
 end
 
 function love.load()
     Gamestate.registerEvents()
     numberOfPlayers = numberOfPlayers + 1
-    p = King:new(world,10 + (55 * numberOfPlayers),10,32 * 4,32 * 4,joystick,keyboard)
+    p = King:new(world,10 + (55 * numberOfPlayers),10,32 ,32 ,joystick,keyboard)
     p.input = Baton.new(keyboard,joystick)
 	players[#players + 1] = p
     Gamestate.switch(menu)
 end
 
+
 function love.joystickadded(joystick)
     numberOfPlayers = numberOfPlayers + 1
-    p = King:new(world,10 + (55 * numberOfPlayers),10,32 * 4,32 * 4,joystick,gamepad)
+    p = King:new(world,10 + (55 * numberOfPlayers),10,32 ,32 ,joystick,gamepad)
 	players[#players + 1] = p
 end

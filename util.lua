@@ -7,17 +7,6 @@ util.drawFilledRectangle = function(left,top,width,height, r,g,b)
     love.graphics.rectangle('line', left,top,width,height)
 end
 
-util.drawFilledRectangleWithRotation = function(left,top,width,height,angle,r,g,b)
-    love.graphics.setColor(r,g,b,100)
-    love.graphics.rotate(angle)
-    love.graphics.rectangle('fill', left,top,width,height)
-    love.graphics.setColor(r,g,b)
-    love.graphics.rotate(angle)
-    love.graphics.rectangle('line', left,top,width,height)
-    love.graphics.rotate(-angle)
-    love.graphics.rotate(-angle)
-end
-
 util.HSL = function (h, s, l)
     if s == 0 then return l,l,l end
     h, s, l = h/256*6, s/255, l/255
